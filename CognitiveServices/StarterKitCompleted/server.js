@@ -5,7 +5,7 @@ var streamifier = require('streamifier');
 var request = require('request');
 
 var portNum = process.env.PORT || 9898;
-var endpoint = 'https://southcentralus.api.cognitive.microsoft.com/'; //'vision_api_endpoint';
+var endpoint = 'https://southcentralus.api.cognitive.microsoft.com/vision/v2.0/'; //'vision_api_endpoint';
 
 var app = express();
 var storage = multer.memoryStorage();
@@ -35,13 +35,6 @@ function configurationMiddleware(req, res, next) {
         storageAccountAccessKey: verifyConfigValue("AZURE_STORAGE_ACCESS_KEY"),
         visionApiKey: verifyConfigValue("AZURE_VISION_API_KEY")
     };
-
-    /*req.appConfig = {
-        storageAccount: "bootcamplk",
-        storageAccountAccessKey: "SSXWDfuRqWqp2Jqpz60fS2gSW3qQdYl58lLbFcztWlXzdsmrhzC00A/AgxuMOuVP0vmVqsL8+bvicG9zc/Ht/Q==",
-        visionApiKey: "b02f40cdb0db438aa5c3f51377efcc97"
-    }; */
-
     next();
 }
 
@@ -51,6 +44,7 @@ function imageHandlerMiddleware(req, res) {
     var cfg = req.appConfig;
     var uploadFile = req.file;
     var blobService = azureStorage.createBlobService(cfg.storageAccount, cfg.storageAccountAccessKey);
+    console.log('blobService >> Service Created')
     var publicUrl = [
         "https://",
         cfg.storageAccount,
@@ -143,6 +137,8 @@ function createThumbnailOfImage(){
     }
 
     function saveAnalysisResults(result) {
+
+        console.log(result);
         var metaData = {
             caption: result.description && result.description.captions && result.description.captions.length ?
                 result.description.captions[0].text :
@@ -151,7 +147,11 @@ function createThumbnailOfImage(){
                 JSON.stringify(result.description.tags) :
                 []
         };
+        //var cfg = req.appConfig;
+        //var blobService = azureStorage.createBlobService(cfg.storageAccount, cfg.storageAccountAccessKey);
 
+        console.log("updating metaData for " + uploadFile.originalname);
+        console.log(metaData);
         blobService.setBlobMetadata(
             'photos',
             uploadFile.originalname,

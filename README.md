@@ -4,4 +4,5 @@ Global AI Bootcamp 2018 - LK - Hands On Lab starters
 ## Topics 
 1. Cognitive Services HOL  - [NodeJS]('CognitiveServices/Cognitive Services HOL.md')
 2. Bot Services HOL   - [NodeJS]('BotService/Azure Bot Service HOL.md')
+3. Custom Vision Service HOL  - [NodeJS]('CustomVisionService/Custom Vision Service HOL.md')
 
